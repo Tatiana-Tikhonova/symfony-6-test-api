@@ -16,24 +16,41 @@ class RequestHandlerService
         public ErrorHandlerService $errorHandlerService,
     )
     {
-        $this->actions = ['get', 'add', 'update', 'delete'];
-        $this->requestKeys = ['action', 'user'];
+//        $this->actions = ['get', 'add', 'update', 'delete'];
+//        $this->requestKeys = ['action', 'user'];
         $this->userKeys = ['id', 'email', 'name', 'sex', 'birthday'];
+    }
+
+    public function checkHeader($headerVal): string|bool
+    {
+        if ('application/json' != $headerVal) {
+            return $this->errorHandlerService->setRequestErrorMsg('headers');
+        }
+        return true;
     }
 
     public function validateRequest(Request $request): string|array
     {
         $headers = $request->headers;
-        $method = $request->getMethod();
+//        $method = $request->getMethod();
         if ('application/json' != $headers->get('accept')
             || 'application/json' != $headers->get('content-type')) {
             return $this->errorHandlerService->setRequestErrorMsg('headers');
         }
-        if ('POST' != $method) {
-            return $this->errorHandlerService->setRequestErrorMsg('method');
-        }
+//        if ('POST' != $method) {
+//            return $this->errorHandlerService->setRequestErrorMsg('method');
+//        }
 
         return $request->toArray();
+    }
+
+    public function checkId(string $id): string|bool
+    {
+        $match = preg_match('/\D/', $id);
+        if (0 === $match && (int)$id > 0) {
+            return true;
+        }
+        return $this->errorHandlerService->setRequestErrorMsg('id');
     }
 
     public function checkFields(Request $request): string|array

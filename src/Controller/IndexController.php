@@ -28,9 +28,9 @@ class IndexController extends AbstractController
 
     }
 
-    #[Route('/', name: 'homepage')]
-    #[Route('/{endpoint}', name: 'incorrectEndpoint', condition: "context.getPathInfo() != '/users'" )]
-        #[Route('/users/{endpoint}', name: 'usersIncorrectEndpoint', requirements: ['endpoint' => '.+'] )]
+    #[Route('/', name: 'homepage',methods: ['GET','POST','PUT','DELETE'])]
+    #[Route('/{endpoint}', name: 'incorrectEndpoint',methods: ['GET','POST','PUT','DELETE'], condition: "context.getPathInfo() != '/users'" )]
+
     public function index(): JsonResponse
     {
         return $this->json([
